@@ -30,7 +30,7 @@ Go to my Downloads folder and tell me what files are there
 
 ## Model
 
-Default: `claude-haiku-4-5`. Claude Code is the brain — no OpenRouter key needed for agent reasoning when using this plugin.
+Default: `claude-haiku-4-5`. Claude Code is the brain, no OpenRouter key needed for agent reasoning when using this plugin.
 
 ## Emergency stop
 
