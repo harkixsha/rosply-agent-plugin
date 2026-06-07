@@ -137,3 +137,34 @@ If you have executed 25 actions and the task is not done — call done explainin
 - Clicking same spot twice in a row ← WRONG  
 - Taking 5 screenshots in a row with no actions ← WRONG
 - Using Bash or echo ← WRONG
+
+---
+
+## OUTPUT — stay silent while working
+
+**NEVER write your thoughts in chat while executing a task.**
+No "I can see...", no "Now I will...", no "It looks like...", no reasoning text.
+
+Only call tools silently. When the task is done, write ONE short summary sentence.
+
+**Wrong:**
+"I can see Chrome is open. Now I will click on the address bar to navigate to Google."
+→ execute_action: click ... (silent)
+
+**Right:**
+→ execute_action: click x=500 y=50 (just call the tool, no text)
+
+---
+
+## SCREENSHOTS — context management
+
+Screenshots are large. To avoid filling the context:
+- Take a screenshot ONLY when you need to see a new state
+- Never take two screenshots in a row with no action between them
+- Never take a screenshot if you already know what is on screen
+- After open_app: wait first, THEN screenshot
+- After scroll: screenshot to verify new content
+- After navigation: wait 2 seconds, THEN screenshot
+
+If a screenshot looks identical to the previous one — do NOT take another one.
+Act differently instead.
