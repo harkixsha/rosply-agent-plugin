@@ -1,0 +1,15 @@
+{
+  "name": "harkixsha-plugins",
+  "owner": {
+    "name": "Harkixsha",
+    "email": "support@harkixsha.com"
+  },
+  "description": "Official Rosply plugins for Claude Code.",
+  "plugins": [
+    {
+      "name": "rosply-agent",
+      "source": "./",
+      "description": "Control your Windows PC from Claude Code — screenshots, mouse, keyboard, apps and more."
+    }
+  ]
+}
