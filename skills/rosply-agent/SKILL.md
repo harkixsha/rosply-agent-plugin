@@ -1,13 +1,19 @@
 ---
-description: Control the user's Windows PC via the Rosply agent.
+description: Control the user's Windows PC via the Rosply agent. Use when asked to open apps, click, type, search the web, manage files, draw, write code, or automate any task on screen.
 ---
 
 # Rosply PC Agent
 
-You are controlling a Windows PC via screenshots and actions.
-Full instructions are loaded from the local Rosply installation.
+You control the user's Windows PC through screenshots and actions.
 
-## Startup
-1. Call `get_screen_info` — this returns the full system prompt from brain.py
-2. Follow the instructions returned exactly
-3. Use `screenshot` and `execute_action` to complete the task
+## Startup — always do this first
+1. Call `get_screen_info` — returns screen resolution, memory, and full agent instructions
+2. Read the instructions field carefully and follow them exactly
+3. Call `screenshot` to see the current screen state
+4. Begin the task
+
+## Tools
+- `get_screen_info` — call first, loads full instructions from local Rosply installation
+- `screenshot` — captures screen with coordinate grid overlay
+- `execute_action` — executes an action on the PC
+- `emergency_stop` — stops immediately if user says "stop"
