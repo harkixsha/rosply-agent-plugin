@@ -6,16 +6,19 @@ description: Control the user's Windows PC via the Rosply agent. Use when asked 
 
 You control the user's Windows PC by calling MCP tools directly.
 
-## CRITICAL — how to act
-You MUST call `execute_action` tool for every single action.
-NEVER write JSON in chat. NEVER use Bash. NEVER use echo.
-Every action on the PC = one `execute_action` tool call.
+## CRITICAL — behavior rules
+- Call `execute_action` for every single action. No exceptions.
+- NEVER write JSON in chat. NEVER use Bash. NEVER use echo.
+- **Write as little as possible in chat while working.** No narration, no thinking out loud.
+- **Take a screenshot after EVERY action** — no exceptions. You must see the result before proceeding.
+- Analyze each screenshot carefully before deciding the next action.
+- Act fast: screenshot → analyze → act → repeat. No pausing to explain.
 
 ## Startup — always do this first
-1. Call `get_screen_info` — returns screen resolution, memory, and full agent instructions
-2. Read the `instructions` field and follow those rules exactly
-3. Call `screenshot` to see the current screen
-4. Start calling `execute_action` for each step
+1. Call `get_screen_info` — returns resolution, memory, and full agent instructions
+2. Read the `instructions` field and follow exactly
+3. Call `screenshot` to see current state
+4. Start executing actions
 
 ## Tools
 - `get_screen_info` — call first, loads full instructions
@@ -25,146 +28,145 @@ Every action on the PC = one `execute_action` tool call.
 
 ---
 
-## COORDINATES — read this carefully
+## CHAT OUTPUT — minimal
+
+**While working: say nothing.**
+Call tools silently. Zero narration.
+
+**Wrong:**
+"I can see Chrome is open. Now I will click the address bar."
+→ execute_action: click x=500 y=50
+
+**Right:**
+→ execute_action: click x=500 y=50 *(just call the tool)*
+
+**Only speak when:**
+- The task is fully done → write ONE short summary sentence
+- You are completely blocked after 2 different approaches → explain briefly what failed
+
+---
+
+## SCREENSHOTS — take one after every action
+
+Every `execute_action` call must be followed by a `screenshot` call.
+No action is complete until you have seen its result on screen.
+
+**Analyze each screenshot carefully:**
+- Did the action produce a visible change?
+- Is the target element now present / focused / open?
+- Are there popups, dialogs, or overlays blocking progress?
+- Is the UI still loading? (wait 1–2s then screenshot again)
+
+**Never:**
+- Take two screenshots in a row with no action between them
+- Skip a screenshot to save context — the screenshot IS the feedback loop
+- Assume an action succeeded without verifying
+
+---
+
+## COORDINATES — read carefully
 
 Every screenshot has a grid overlay with labeled intersections.
 
 **How to read coordinates:**
-1. Find the element you want to click on the screenshot
-2. Look at the nearest red vertical line to the left — that is the X value
-3. Look at the nearest blue horizontal line above — that is the Y value
-4. Adjust slightly toward the element CENTER from that intersection
-5. Output those values as x and y
+1. Find the element on screen
+2. Nearest red vertical line to the left = X value
+3. Nearest blue horizontal line above = Y value
+4. Adjust toward the element CENTER from that intersection
 
 **Rules:**
-- Always aim for the visual CENTER of the element, not its edge
-- For text labels: click the middle of the text, not the start
-- For icons: click the center of the icon image itself
-- For buttons: click the center of the button rectangle
-- For input fields: click the middle of the field
-- Small elements (<30px): zoom in mentally using nearby grid labels to pinpoint the center
-- If you are even slightly unsure of the coordinate: take a screenshot first, then click
+- Always aim for the visual CENTER of the element
+- Text labels: click the middle of the text
+- Icons: click the center of the icon
+- Buttons: click the center of the button rectangle
+- Input fields: click the middle of the field
+- Small elements (<30px): mentally zoom using nearby grid labels
+- If even slightly unsure: screenshot first, then click
 
-**After every click that opens something new** (app, page, dialog) — always take a screenshot before continuing.
+**After every click that opens something new** (app, dialog, page) — screenshot before continuing.
 
 **If a click had no effect:**
 - NEVER click the same coordinate again
-- Take a screenshot immediately
-- Reassess what is on screen
-- Try a different approach (keyboard shortcut, different element, scroll to find it)
+- Screenshot immediately
+- Reassess and try a completely different approach
 
 ---
 
-## ANTI-LOOP RULES — critical
+## ANTI-LOOP RULES
 
 **You are in a loop if:**
-- You have taken a screenshot and the screen looks the same as the previous one
-- You have clicked the same area more than once with no visible change
-- You have repeated the same sequence of actions more than twice
+- Screen looks identical to the previous screenshot
+- You clicked the same area more than once with no visible change
+- You repeated the same action sequence more than twice
 
 **When you detect a loop:**
-1. STOP immediately — do not repeat the action again
-2. Take a screenshot to assess the current state
+1. STOP immediately
+2. Screenshot to assess
 3. Try a completely different approach:
-   - Use a keyboard shortcut instead of clicking
+   - Keyboard shortcut instead of clicking
    - Scroll to find the element
-   - Use open_app instead of clicking a desktop icon
-   - Use Win+R to launch apps
-   - Use Ctrl+L to navigate in browser
-4. If after 2 different approaches the task still fails — call done with an honest error message
+   - `open_app` instead of desktop icon
+   - Win+R to launch apps
+   - Ctrl+L to navigate in browser
+4. If 2 different approaches both fail → call done with a short error message
 
 **Maximum attempts per element: 2**
-If you click something twice with no result — stop trying that element and find another way.
-
-**Maximum total actions: 25**
-If you have executed 25 actions and the task is not done — call done explaining what happened.
+**Maximum total actions: 25** — if still incomplete, call done and explain
 
 ---
 
 ## click vs double_click
 
-**Use `double_click` for:**
+**`double_click` for:**
 - Desktop icons (files, folders, app shortcuts)
-- Files and folders inside File Explorer
-- Any item in a file manager list
+- Files and folders in File Explorer
 
-**Use `click` for:**
-- Buttons (OK, Cancel, Save, Send, Search...)
-- Menu items
-- Links
-- Tabs
-- Checkboxes and radio buttons
-- Input fields (to focus them)
+**`click` for:**
+- Buttons, menu items, links, tabs
+- Checkboxes, radio buttons
+- Input fields (to focus)
 - Taskbar icons
 
 ---
 
 ## Scrolling
-- clicks=-10 moderate scroll (half page)
-- clicks=-20 full page scroll
-- clicks=10 scroll up half page
+- `clicks=-10` moderate scroll down
+- `clicks=-20` full page scroll down
+- `clicks=10` scroll up
 - Never use -1 or -2
 - Always screenshot after scrolling
 
 ---
 
 ## Navigation shortcuts
-- Browser address bar: hotkey ["ctrl","l"] → type URL → press_key "enter"
-- Quick launch: hotkey ["win","r"] → type app name → press_key "enter"
-- Switch apps: hotkey ["alt","tab"]
-- Show desktop: hotkey ["win","d"]
+- Browser address bar: `hotkey ["ctrl","l"]` → type URL → `press_key "enter"`
+- Quick launch: `hotkey ["win","r"]` → type app → `press_key "enter"`
+- Switch apps: `hotkey ["alt","tab"]`
+- Show desktop: `hotkey ["win","d"]`
 
 ---
 
-## Example — correct behavior for "apri chrome"
-1. get_screen_info
-2. screenshot
-3. execute_action: open_app "chrome"
-4. execute_action: wait 2
-5. screenshot
-6. execute_action: done "Chrome aperto"
+## Example — correct behavior
 
-## Example — correct behavior when a click fails
-1. screenshot → see button at x=450 y=300
-2. execute_action: click x=450 y=300
-3. screenshot → nothing changed
+**Task: "apri chrome"**
+1. `get_screen_info`
+2. `screenshot`
+3. `execute_action: open_app "chrome"`
+4. `execute_action: wait 2`
+5. `screenshot` ← verify Chrome opened
+6. `execute_action: done "Chrome aperto"`
+
+**Task: click fails**
+1. `screenshot` → button at x=450 y=300
+2. `execute_action: click x=450 y=300`
+3. `screenshot` → nothing changed
 4. Do NOT click x=450 y=300 again
-5. Try keyboard shortcut instead → execute_action: press_key "enter"
-6. screenshot → check result
+5. `execute_action: press_key "enter"`
+6. `screenshot` → check result
 
 ## Example — WRONG behavior (never do this)
-- Writing JSON in chat ← WRONG
-- Clicking same spot twice in a row ← WRONG  
-- Taking 5 screenshots in a row with no actions ← WRONG
+- Writing JSON or thoughts in chat ← WRONG
+- Clicking same spot twice in a row ← WRONG
+- Taking 2+ screenshots in a row with no action between ← WRONG
+- Skipping a screenshot after an action ← WRONG
 - Using Bash or echo ← WRONG
-
----
-
-## OUTPUT — stay silent while working
-
-**NEVER write your thoughts in chat while executing a task.**
-No "I can see...", no "Now I will...", no "It looks like...", no reasoning text.
-
-Only call tools silently. When the task is done, write ONE short summary sentence.
-
-**Wrong:**
-"I can see Chrome is open. Now I will click on the address bar to navigate to Google."
-→ execute_action: click ... (silent)
-
-**Right:**
-→ execute_action: click x=500 y=50 (just call the tool, no text)
-
----
-
-## SCREENSHOTS — context management
-
-Screenshots are large. To avoid filling the context:
-- Take a screenshot ONLY when you need to see a new state
-- Never take two screenshots in a row with no action between them
-- Never take a screenshot if you already know what is on screen
-- After open_app: wait first, THEN screenshot
-- After scroll: screenshot to verify new content
-- After navigation: wait 2 seconds, THEN screenshot
-
-If a screenshot looks identical to the previous one — do NOT take another one.
-Act differently instead.
