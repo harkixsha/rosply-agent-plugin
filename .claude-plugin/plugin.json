@@ -2,7 +2,7 @@
   "name": "rosply-agent",
   "displayName": "Rosply PC Agent",
   "description": "Connects Claude Code to Rosply - see the screen, move the mouse, click, type, open apps, and control any Windows application.",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "author": {
     "name": "Harkixsha",
     "url": "https://rosply.com"
