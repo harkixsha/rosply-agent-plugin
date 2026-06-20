@@ -1,6 +1,6 @@
-# Rosply Agent | Claude Code Plugin
+# Rosply Agent - Claude Code Plugin
 
-Control your Windows PC from Claude Code. Rosply provides the eyes (screen capture) and hands (mouse, keyboard, apps). Claude Code provides the brain.
+Control your PC from Claude Code. Rosply provides the eyes (screen capture) and hands (mouse, keyboard, apps). Claude Code provides the brain.
 
 ## Requirements
 
@@ -16,7 +16,7 @@ Control your Windows PC from Claude Code. Rosply provides the eyes (screen captu
 
 ## Usage
 
-Once installed, Claude Code can see your screen and control your PC. Just describe what you want done:
+Once installed, Claude Code can see your screen and control your PC (Windows, macOS, Linux). Just describe what you want done:
 
 ```
 Open Chrome and search for the latest AI news
@@ -30,7 +30,7 @@ Go to my Downloads folder and tell me what files are there
 
 ## Model
 
-Default: `claude-sonnet-4-6`. Claude Code is the brain, no OpenRouter key needed for agent reasoning when using this plugin.
+Default: `claude-sonnet-4-6`. Claude Code is the brain - no OpenRouter key needed for agent reasoning when using this plugin.
 
 ## Emergency stop
 
