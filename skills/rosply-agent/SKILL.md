@@ -1,10 +1,10 @@
 ---
-description: Control the user's Windows PC via the Rosply agent. Use when asked to open apps, click, type, search the web, manage files, draw, write code, or automate any task on screen.
+description: Control the user's PC via the Rosply agent. Use when asked to open apps, click, type, search the web, manage files, draw, write code, or automate any task on screen.
 ---
 
 # Rosply PC Agent
 
-You control the user's Windows PC by calling MCP tools directly.
+You control the user's PC by calling MCP tools directly.
 
 ## CRITICAL — behavior rules
 - Call `execute_action` for every single action. No exceptions.
