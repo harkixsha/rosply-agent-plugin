@@ -1,12 +1,12 @@
 {
   "name": "rosply-agent",
   "displayName": "Rosply PC Agent",
-  "description": "Connects Claude Code to Rosply - see the screen, move the mouse, click, type, open apps, and control any Windows application.",
-  "version": "1.0.6",
+  "description": "Connects Claude Code to Rosply - see the screen, move the mouse, click, type, open apps, and control any application.",
+  "version": "1.0.7",
   "author": {
     "name": "Harkixsha",
-    "url": "https://harkixsha.com"
+    "url": "https://rosply.com"
   },
   "homepage": "https://rosply.com",
-  "license": "Commercial"
+  "license": "MIT"
 }
